@@ -14,6 +14,11 @@ function _drawQuestion() {
   setHTML('questions', template)
 }
 
+function _drawCurrentQ() {
+  let firstQuestion = AppState.questions[0]
+  setHTML('currentQuestion', firstQuestion.MultipleChoiceQ)
+}
+
 export class QuestionsController {
 
   constructor() {
@@ -21,8 +26,9 @@ export class QuestionsController {
 
     // this.getAnimalQuestion()
     // this.getSportsQuestion()
-
+    this.getMultipleChoice()
     AppState.on('questions', _drawQuestion);
+    AppState.on('questions', _drawCurrentQ)
 
   }
 
@@ -32,11 +38,18 @@ export class QuestionsController {
   }
 
 
-
   async getAnimalQuestion() {
     try {
       await questionsService.getAnimalQuestion()
       Pop.success('We have an animal question!')
+    } catch (error) {
+      console.error(error)
+      Pop.error(error.message)
+    }
+  }
+  async getMultipleChoice() {
+    try {
+      await questionsService.getMultipleChoice()
     } catch (error) {
       console.error(error)
       Pop.error(error.message)
@@ -60,5 +73,9 @@ export class QuestionsController {
       console.error(error)
       Pop.error(error.message)
     }
+  }
+
+  guessAnswer(userAnswer) {
+    questionsService.guessAnswer(userAnswer)
   }
 }

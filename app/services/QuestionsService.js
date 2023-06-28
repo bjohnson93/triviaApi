@@ -4,6 +4,26 @@ import { Pop } from "../utils/Pop.js";
 import { questionsApi } from "./AxiosService.js"
 
 class QuestionsService {
+  guessAnswer(userAnswer) {
+    let q = AppState.questions[0]
+    if (userAnswer == q.correctAnswer) {
+      Pop.success('You got it right!')
+    }
+    else {
+      Pop.error("You've got it wrong!")
+    }
+
+    AppState.questions.shift()
+
+    AppState.emit('questions')
+  }
+  async getMultipleChoice() {
+    const res = await triviaApi.get('?amount=10&type=multiple')
+    console.log('got questions', res.data);
+    const realQuestions = res.data.results.map(questionPojo => new Question(questionPojo))
+    AppState.questions = realQuestions
+
+  }
   async getAnimalQuestion() {
 
     const response = await questionsApi.get('?amount=1&category=27&difficulty=easy&type=boolean')

@@ -8,6 +8,34 @@ export class Question {
     this.incorrectAnswers = data.incorrect_answers
   }
 
+
+  get MultipleChoiceQ() {
+    return `
+    <div class="col-12 text-center">
+          <h1>${this.category}</h1>
+          <h2>${this.question}</h2>
+          <h3>${this.difficulty}</h3>
+          <div>
+            ${this.ComputeQuestionButtons}
+          </div>
+        </div>
+    `
+  }
+
+  get ComputeQuestionButtons() {
+    let template = ''
+
+    let randomIndex = Math.floor(Math.random() * (this.incorrectAnswers.length + 1))
+
+    this.incorrectAnswers.splice(randomIndex, 0, this.correctAnswer)
+
+    this.incorrectAnswers.forEach(answer => template += `
+    <button onclick="app.QuestionsController.guessAnswer(`${ answer }`)" class="btn btn-danger" >${answer}</button>`)
+    // this.incorrectAnswers.forEach(answer => template += `
+    // <button class="btn ${answer == this.correctAnswer ? 'btn-danger' : 'btn-success'}" >${answer}</button>`)
+    return
+  }
+
   get QuestionTemplate() {
     return `
     <section class="row p-5">
@@ -30,3 +58,16 @@ export class Question {
     `
   }
 }
+
+
+// let qData = {
+//   "category": "Science: Computers",
+//   "type": "multiple",
+//   "difficulty": "easy",
+//   "question": "What does CPU stand for?",
+//   "correct_answer": "Central Processing Unit",
+//   "incorrect_answers": [
+//     "Central Process Unit",
+//     "Computer Personal Unit",
+//     "Central Processor Unit"
+//   }
